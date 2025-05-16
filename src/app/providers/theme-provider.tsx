@@ -9,7 +9,14 @@ import {
 } from "react";
 
 type Theme = "light" | "dark";
-type Font = "sans" | "serif" | "mono";
+export type Font = "serif" | "sans" | "mono";
+
+// Mapeo de clases CSS según la fuente
+export const fontClassMap: Record<Font, string> = {
+  serif: "font-serif",
+  sans: "font-sans",
+  mono: "font-mono",
+};
 
 interface ThemeContextProps {
   theme: Theme;

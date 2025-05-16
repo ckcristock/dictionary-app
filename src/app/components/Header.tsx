@@ -3,17 +3,16 @@
 import React from "react";
 import ThemeToggle from "./ThemeToggle";
 
-type Font = {
-  label: string;
-  className: string;
-};
+import { useTheme, Font } from "@/app/providers/theme-provider";
+
+type FontOption = { label: string; value: Font };
 
 type HeaderProps = {
-  fonts: Font[];
+  fonts: FontOption[];
   font: Font;
   setFont: (font: Font) => void;
-  darkMode: boolean;
-  setDarkMode: (value: boolean) => void;
+  darkMode?: boolean;
+  setDarkMode?: (value: boolean) => void;
 };
 
 const Header: React.FC<HeaderProps> = ({
@@ -48,14 +47,14 @@ const Header: React.FC<HeaderProps> = ({
         <select
           aria-label="Select font"
           className="bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-1 cursor-pointer"
-          value={font.label}
+          value={font}
           onChange={(e) => {
-            const selectedFont = fonts.find((f) => f.label === e.target.value);
-            if (selectedFont) setFont(selectedFont);
+            const selectedFont = fonts.find((f) => f.value === e.target.value);
+            if (selectedFont) setFont(selectedFont.value);
           }}
         >
           {fonts.map((f) => (
-            <option key={f.label} value={f.label}>
+            <option key={f.value} value={f.value}>
               {f.label}
             </option>
           ))}
