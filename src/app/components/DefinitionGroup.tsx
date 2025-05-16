@@ -12,7 +12,12 @@ const DefinitionGroup: React.FC<DefinitionGroupProps> = ({
   quote,
 }) => (
   <div>
-    <h2 className="italic font-semibold mb-2">{partOfSpeech}</h2>
+    <div className="flex items-center mb-2">
+      <h2 className="italic font-semibold mr-4 whitespace-nowrap">
+        {partOfSpeech}
+      </h2>
+      <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
+    </div>
     <p className="mb-2 font-semibold">Meaning</p>
     <ul className="list-disc pl-5 space-y-1 text-gray-700 dark:text-gray-300">
       {meanings.map((m, i) => (
