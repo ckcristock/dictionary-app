@@ -1,27 +1,28 @@
 "use client";
 
 import { useTheme } from "@/app/providers/theme-provider";
-import { Sun, Moon } from "lucide-react";
 
 export default function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 
+  const isDark = theme === "dark";
+
   const handleToggle = () => {
-    const newTheme = theme === "dark" ? "light" : "dark";
-    console.log("Cambiando tema a:", newTheme); // ✅ Log para depurar
-    setTheme(newTheme);
+    setTheme(isDark ? "light" : "dark");
   };
 
   return (
     <button
       onClick={handleToggle}
       aria-label="Toggle Theme"
-      className="flex items-center justify-center w-10 h-6 bg-gray-200 dark:bg-gray-700 rounded-full cursor-pointer relative p-0"
+      className={`relative flex items-center w-14 h-8 rounded-full cursor-pointer transition-colors duration-300 ${
+        isDark ? "bg-gray-700" : "bg-[#757575]"
+      }`}
     >
       <span
-        className={`w-4 h-4 bg-purple-600 rounded-full shadow-md transform duration-300 ease-in-out ${
-          theme === "dark" ? "translate-x-4" : "translate-x-0"
-        }`}
+        className={`absolute left-1 top-1 w-6 h-6 rounded-full transition-transform duration-300 ${
+          isDark ? "translate-x-6" : "translate-x-0"
+        } bg-[#ededed]`}
       />
     </button>
   );
