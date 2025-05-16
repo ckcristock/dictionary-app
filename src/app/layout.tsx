@@ -32,7 +32,6 @@ export default function RootLayout({
           <main className="flex flex-col items-center px-4 py-6 max-w-3xl mx-auto">
             {/* Aquí irá el Header con los toggles */}
             <header className="w-full mb-6 flex justify-between items-center">
-              <h1 className="text-xl font-bold">📘 Dictionary</h1>
               {/* Aquí vendrán los toggles */}
               {/* Por ejemplo: <ThemeToggle /> y <FontSelector /> */}
             </header>
