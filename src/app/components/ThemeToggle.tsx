@@ -1,28 +1,35 @@
 "use client";
 
 import { useTheme } from "@/app/providers/theme-provider";
+import { useEffect, useState } from "react";
 
 export default function ThemeToggle() {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false); // Para evitar problemas de hidratación
 
-  const isDark = theme === "dark";
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   const handleToggle = () => {
-    setTheme(isDark ? "light" : "dark");
+    const newTheme = theme === "dark" ? "light" : "dark";
+    setTheme(newTheme);
   };
 
   return (
     <button
       onClick={handleToggle}
       aria-label="Toggle Theme"
-      className={`relative flex items-center w-14 h-8 rounded-full cursor-pointer transition-colors duration-300 ${
-        isDark ? "bg-gray-700" : "bg-[#757575]"
-      }`}
+      className="flex items-center justify-start w-12 h-6 bg-[#757575] rounded-full cursor-pointer relative p-0"
     >
       <span
-        className={`absolute left-1 top-1 w-6 h-6 rounded-full transition-transform duration-300 ${
-          isDark ? "translate-x-6" : "translate-x-0"
-        } bg-[#ededed]`}
+        className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full shadow-md transform transition-transform duration-300 ease-in-out ${
+          theme === "dark"
+            ? "translate-x-6 bg-[#ededed]"
+            : "translate-x-0 bg-[#ededed]"
+        }`}
       />
     </button>
   );

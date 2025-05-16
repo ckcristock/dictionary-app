@@ -15,10 +15,19 @@ type ThemeContextType = {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>(() => {
+    // Detecta el tema del sistema al cargar
+    if (typeof window !== "undefined" && window.matchMedia) {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    }
+    return "light"; // fallback
+  });
+
   const [font, setFont] = useState<Font>("serif");
 
-  // 👇 Aplica clase dark/light al <html>
+  // Aplica clase dark/light al <html>
   useEffect(() => {
     const root = document.documentElement;
     if (theme === "dark") {
