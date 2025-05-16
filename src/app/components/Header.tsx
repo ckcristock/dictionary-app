@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
+import ThemeToggle from "./ThemeToggle";
 
 type Font = {
   label: string;
-  // Puedes agregar más propiedades si tu objeto Font las tiene
+  className: string;
 };
 
 type HeaderProps = {
@@ -61,17 +62,7 @@ const Header: React.FC<HeaderProps> = ({
         </select>
 
         {/* Toggle dark mode */}
-        <button
-          aria-label="Toggle dark mode"
-          onClick={() => setDarkMode(!darkMode)}
-          className="flex items-center justify-center w-10 h-6 bg-gray-200 dark:bg-gray-700 rounded-full cursor-pointer relative"
-        >
-          <span
-            className={`w-4 h-4 bg-purple-600 rounded-full shadow-md transform duration-300 ease-in-out ${
-              darkMode ? "translate-x-4" : "translate-x-0"
-            }`}
-          />
-        </button>
+        <ThemeToggle />
 
         {/* Moon icon */}
         <svg

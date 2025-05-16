@@ -44,6 +44,9 @@ export default function HomePage() {
         {/* Results */}
         <Results search={search} />
       </main>
+      <div className="bg-red-500 text-white p-4 rounded">
+        Esto debe verse rojo si Tailwind está funcionando.
+      </div>
     </div>
   );
 }
