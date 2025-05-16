@@ -29,12 +29,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-white text-black dark:bg-neutral-900 dark:text-white antialiased transition-colors`}
       >
         <ThemeProvider>
-          <main className="flex flex-col items-center px-4 py-6 max-w-3xl mx-auto">
+          <main className="flex flex-col items-center px-4 pt-0 pb-6 max-w-3xl mx-auto">
             {/* Aquí irá el Header con los toggles */}
-            <header className="w-full mb-6 flex justify-between items-center">
-              {/* Aquí vendrán los toggles */}
-              {/* Por ejemplo: <ThemeToggle /> y <FontSelector /> */}
-            </header>
 
             {/* Contenido principal */}
             <section className="w-full">{children}</section>
