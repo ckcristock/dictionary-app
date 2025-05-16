@@ -29,7 +29,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-white text-black dark:bg-neutral-900 dark:text-white antialiased transition-colors`}
       >
         <ThemeProvider>
-          <main className="flex flex-col items-center px-4 pt-0 pb-6 max-w-3xl mx-auto">
+          <main className="flex flex-col items-center px-10 pt-6 pb-6 max-w-3xl mx-auto">
             {/* Aquí irá el Header con los toggles */}
 
             {/* Contenido principal */}
