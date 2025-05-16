@@ -46,7 +46,11 @@ const Header: React.FC<HeaderProps> = ({
         {/* Font selector */}
         <select
           aria-label="Select font"
-          className="bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-3 py-1 cursor-pointer"
+          className={`rounded px-3 py-1 cursor-pointer shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 ${
+            useTheme().theme === "dark"
+              ? "bg-gray-800 text-gray-100"
+              : "bg-[#f4f4f4] text-black"
+          }`}
           value={font}
           onChange={(e) => {
             const selectedFont = fonts.find((f) => f.value === e.target.value);
