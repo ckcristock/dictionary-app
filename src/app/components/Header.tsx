@@ -28,16 +28,19 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="flex justify-between items-center mb-6 pt-9">
-      <div className="text-3xl font-bold cursor-pointer select-none">
-        {/* Icon libro simple */}
+      <button
+        className="text-3xl font-bold cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 rounded transition"
+        aria-label="Go to home"
+        type="button"
+      >
         <Image src={libroIcon} alt="Libro Icon" width={40} height={40} />
-      </div>
+      </button>
 
       <div className="flex items-center space-x-6">
         {/* Font selector */}
         <select
           aria-label="Select font"
-          className={`rounded px-3 py-1 cursor-pointer shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 ${
+          className={`rounded px-3 py-1 cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 transition-colors ${
             theme === "dark"
               ? "bg-gray-800 text-gray-100"
               : "bg-[#f4f4f4] text-black"
