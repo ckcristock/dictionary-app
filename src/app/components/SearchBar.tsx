@@ -23,6 +23,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const [error, setError] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const searchBtnRef = useRef<HTMLButtonElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
@@ -49,9 +50,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         inputRef.current?.focus();
       }
     };
-    if (showSuggestions) {
-      window.addEventListener("keydown", handleEsc);
-    }
+    if (showSuggestions) window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
   }, [showSuggestions]);
 
@@ -60,7 +59,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
       const active = document.activeElement;
       if (
         suggestionsRef.current?.contains(active) ||
-        inputRef.current?.contains(active)
+        inputRef.current?.contains(active) ||
+        searchBtnRef.current?.contains(active)
       ) {
         return;
       }
@@ -96,29 +96,36 @@ const SearchBar: React.FC<SearchBarProps> = ({
         );
 
   const handleSuggestionKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Tab" && suggestionsRef.current) {
-      const focusables = Array.from(
-        suggestionsRef.current.querySelectorAll(
-          'li[tabindex="0"], li[tabindex="0"] button, div[role="button"]'
-        )
-      ) as HTMLElement[];
-      const currentIndex = focusables.findIndex(
-        (el) => el === document.activeElement
-      );
-      let next = e.shiftKey ? currentIndex - 1 : currentIndex + 1;
+    if (e.key !== "Tab" || !suggestionsRef.current) return;
+    const focusables = Array.from(
+      suggestionsRef.current.querySelectorAll("li[tabindex='0'], button")
+    ) as HTMLElement[];
+    const currentIndex = focusables.findIndex(
+      (el) => el === document.activeElement
+    );
+    // determine next index
+    let next = e.shiftKey ? currentIndex - 1 : currentIndex + 1;
 
-      if (next < 0) next = focusables.length - 1;
-      if (next >= focusables.length) {
-        // exit suggestions back to search input
-        e.preventDefault();
-        setShowSuggestions(false);
-        inputRef.current?.focus();
-        return;
-      }
-
+    // forward tab past last -> search button
+    if (!e.shiftKey && next >= focusables.length) {
       e.preventDefault();
-      focusables[next].focus();
+      setShowSuggestions(false);
+      searchBtnRef.current?.focus();
+      return;
     }
+    // backward tab before first -> search button
+    if (e.shiftKey && next < 0) {
+      e.preventDefault();
+      setShowSuggestions(false);
+      searchBtnRef.current?.focus();
+      return;
+    }
+    // wrap within suggestions
+    if (next < 0) next = focusables.length - 1;
+    if (next >= focusables.length) next = 0;
+
+    e.preventDefault();
+    focusables[next].focus();
   };
 
   return (
@@ -144,6 +151,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       />
 
       <button
+        ref={searchBtnRef}
         aria-label="Search"
         tabIndex={showSuggestions ? -1 : 0}
         className="absolute right-4 top-1/2 -translate-y-1/2 hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 rounded cursor-pointer"
