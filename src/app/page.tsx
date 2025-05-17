@@ -5,7 +5,9 @@ import SearchBar from "./components/SearchBar";
 import Results from "./components/Results";
 import React, { useState } from "react";
 
-import { useTheme, Font } from "@/app/providers/theme-provider";
+import { useAppSelector, useAppDispatch } from "@/app/hooks/redux";
+import { setFont } from "@/app/store/themeSlice";
+import type { Font } from "@/app/store/themeSlice";
 
 const fontOptions: { label: string; value: Font }[] = [
   { label: "Serif", value: "serif" },
@@ -14,7 +16,13 @@ const fontOptions: { label: string; value: Font }[] = [
 ];
 
 export default function HomePage() {
-  const { font, setFont } = useTheme(); // ✅ Usamos el contexto
+  const dispatch = useAppDispatch();
+  const font = useAppSelector((state) => state.theme.font);
+
+  const handleSetFont = (newFont: Font) => {
+    dispatch(setFont(newFont));
+  };
+
   const [search, setSearch] = useState("keyboard");
 
   return (
@@ -22,7 +30,7 @@ export default function HomePage() {
       className={`max-w-5xl mx-auto p-4 md:p-8 ${`font-${font}`} flex flex-col min-h-screen`}
     >
       {/* Header: Icon + Controls */}
-      <Header fonts={fontOptions} font={font} setFont={setFont} />
+      <Header fonts={fontOptions} font={font} setFont={handleSetFont} />
 
       {/* Search input */}
       <SearchBar

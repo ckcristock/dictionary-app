@@ -1,10 +1,12 @@
 "use client";
 
-import { useTheme } from "@/app/providers/theme-provider";
 import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/app/hooks/redux";
+import { toggleTheme } from "@/app/store/themeSlice";
 
 export default function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const dispatch = useAppDispatch();
+  const theme = useAppSelector((state) => state.theme.theme);
   const [mounted, setMounted] = useState(false); // Para evitar problemas de hidratación
 
   useEffect(() => {
@@ -14,8 +16,7 @@ export default function ThemeToggle() {
   if (!mounted) return null;
 
   const handleToggle = () => {
-    const newTheme = theme === "dark" ? "light" : "dark";
-    setTheme(newTheme);
+    dispatch(toggleTheme());
   };
 
   return (

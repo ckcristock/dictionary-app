@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useTheme } from "@/app/providers/theme-provider";
 
 type SearchBarProps = {
   search: string;
@@ -14,18 +13,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
   setSearch,
   onSearch,
 }) => {
-  const { theme } = useTheme();
-
-  const isDark = theme === "dark";
-
   return (
     <div className="mb-10 w-full relative">
       <input
         type="search"
         placeholder="Search word..."
-        className={`w-full rounded-xl px-5 py-3 text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 ${
-          isDark ? "bg-gray-800 text-gray-100" : "bg-[#f4f4f4] text-black"
-        }`}
+        className={`w-full rounded-xl px-5 py-3 text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600`}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />

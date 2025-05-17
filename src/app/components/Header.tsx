@@ -2,8 +2,8 @@
 
 import React from "react";
 import ThemeToggle from "./ThemeToggle";
-
-import { useTheme, Font } from "@/app/providers/theme-provider";
+import { useAppSelector } from "@/app/hooks/redux";
+import type { Font } from "@/app/store/themeSlice"; // Ajusta según tu estructura
 
 type FontOption = { label: string; value: Font };
 
@@ -22,6 +22,8 @@ const Header: React.FC<HeaderProps> = ({
   darkMode,
   setDarkMode,
 }) => {
+  const theme = useAppSelector((state) => state.theme.theme);
+
   return (
     <header className="flex justify-between items-center mb-6">
       <div className="text-3xl font-bold cursor-pointer select-none">
@@ -47,7 +49,7 @@ const Header: React.FC<HeaderProps> = ({
         <select
           aria-label="Select font"
           className={`rounded px-3 py-1 cursor-pointer shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 ${
-            useTheme().theme === "dark"
+            theme === "dark"
               ? "bg-gray-800 text-gray-100"
               : "bg-[#f4f4f4] text-black"
           }`}
