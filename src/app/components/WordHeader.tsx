@@ -14,7 +14,7 @@ const WordHeader: React.FC<WordHeaderProps> = ({ word, phonetic, onPlay }) => (
 
       <button
         aria-label="Play pronunciation"
-        className="bg-purple-200 hover:bg-purple-300 rounded-full w-16 h-16 flex items-center justify-center shadow-md ml-4"
+        className="bg-purple-200 hover:bg-purple-300 rounded-full w-16 h-16 flex items-center justify-center shadow-md ml-4 cursor-pointer"
         onClick={onPlay}
       >
         ▶

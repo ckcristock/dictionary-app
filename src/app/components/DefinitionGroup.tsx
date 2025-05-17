@@ -34,7 +34,7 @@ const DefinitionGroup: React.FC<DefinitionGroupProps> = ({
               href={`https://en.wiktionary.org/wiki/${s}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-purple-600 hover:underline"
+              className="text-purple-600 hover:underline cursor-pointer focus:outline-none focus:underline"
             >
               {s}
             </a>
