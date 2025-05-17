@@ -23,7 +23,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const dispatch = useDispatch();
   const history = useSelector((state: RootState) => state.dictionary.history);
 
-  // Cargar historial desde localStorage al montar el componente (cliente)
   useEffect(() => {
     const historyJson = localStorage.getItem("searchHistory");
     if (historyJson) {
@@ -37,6 +36,20 @@ const SearchBar: React.FC<SearchBarProps> = ({
       }
     }
   }, [dispatch]);
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setShowSuggestions(false);
+      }
+    };
+    if (showSuggestions) {
+      window.addEventListener("keydown", handleEsc);
+    } else {
+      window.removeEventListener("keydown", handleEsc);
+    }
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, [showSuggestions]);
 
   const handleSearch = () => {
     if (!search.trim()) {
@@ -55,6 +68,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
     setShowSuggestions(false);
   };
 
+  // Aquí filtramos el historial según search (case insensitive)
+  const filteredHistory =
+    search.trim() === ""
+      ? history
+      : history.filter((item) =>
+          item.word.toLowerCase().includes(search.toLowerCase())
+        );
+
   return (
     <div className="mb-10 w-full relative">
       <input
@@ -66,11 +87,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
         }`}
         value={search}
         onChange={(e) => {
-          setSearch(e.target.value);
+          const value = e.target.value;
+          setSearch(value);
           if (error) setError("");
           setShowSuggestions(true);
         }}
-        onFocus={() => setShowSuggestions(true)}
+        onFocus={() => {
+          setShowSuggestions(true);
+        }}
         onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
         onKeyDown={(e) => {
           if (e.key === "Enter") handleSearch();
@@ -89,10 +113,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
       {error && <p className="text-red-500 text-sm mt-2 pl-1">{error}</p>}
 
-      {showSuggestions && history.length > 0 && (
+      {showSuggestions && filteredHistory.length > 0 && (
         <div className="absolute left-0 right-0 mt-1 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-xl shadow-md z-10 max-h-60 overflow-y-auto">
           <ul>
-            {history.map((item, idx) => (
+            {filteredHistory.map((item, idx) => (
               <li
                 key={idx}
                 className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-800 text-sm text-gray-800 dark:text-gray-200"
@@ -106,16 +130,18 @@ const SearchBar: React.FC<SearchBarProps> = ({
             ))}
           </ul>
 
-          <button
-            onMouseDown={(e) => {
-              // evitar que el input pierda foco **antes** de disparar el dispatch
-              e.preventDefault();
-              dispatch(clearHistory());
-            }}
-            className="flex items-center gap-2 text-xs font-medium text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors cursor-pointer"
-          >
-            <Trash2 size={14} /> Clear history
-          </button>
+          <div className="flex justify-end px-3 py-2 border-t border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800">
+            <button
+              onMouseDown={(e) => {
+                e.preventDefault();
+                dispatch(clearHistory());
+              }}
+              className="flex items-center gap-2 text-xs font-medium text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors cursor-pointer"
+              type="button"
+            >
+              <Trash2 size={14} /> Clear history
+            </button>
+          </div>
         </div>
       )}
     </div>
