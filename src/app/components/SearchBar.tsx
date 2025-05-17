@@ -1,9 +1,13 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import { Search, Trash2 } from "lucide-react";
+import { Search, Trash2, X } from "lucide-react";
 import { RootState } from "../store";
 import { useDispatch, useSelector } from "react-redux";
-import { clearHistory, setHistoryFromStorage } from "../store/dictionarySlice";
+import {
+  clearHistory,
+  setHistoryFromStorage,
+  removeHistoryItem,
+} from "../store/dictionarySlice";
 
 type SearchBarProps = {
   search: string;
@@ -52,9 +56,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     return () => window.removeEventListener("keydown", handleEsc);
   }, [showSuggestions]);
 
-  // Nuevo handler para evitar que blur cierre la lista antes del click
   const handleBlur = (e: React.FocusEvent) => {
-    // Si el nuevo foco está dentro del contenedor de sugerencias o input, no cerramos
     if (
       suggestionsRef.current &&
       suggestionsRef.current.contains(e.relatedTarget as Node)
@@ -75,7 +77,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
       setError("Please enter a word to search.");
       return;
     }
-
     setError("");
     onSearch();
     setShowSuggestions(false);
@@ -85,6 +86,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
     setSearch(word);
     setShowSuggestions(false);
     onSearch(word);
+  };
+
+  const handleRemoveHistoryItem = (word: string) => {
+    dispatch(removeHistoryItem(word));
   };
 
   const filteredHistory =
@@ -134,23 +139,35 @@ const SearchBar: React.FC<SearchBarProps> = ({
       {showSuggestions && filteredHistory.length > 0 && (
         <div
           ref={suggestionsRef}
-          tabIndex={-1} // para que pueda recibir focus si es necesario
+          tabIndex={-1}
           className="absolute left-0 right-0 mt-1 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-xl shadow-md z-10 max-h-60 overflow-y-auto"
         >
           <ul>
             {filteredHistory.map((item, idx) => (
               <li
                 key={idx}
-                className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-800 text-sm text-gray-800 dark:text-gray-200"
-                onMouseDown={(e) => {
-                  e.preventDefault(); // evitar que el blur se dispare antes
-                  handleSelectHistory(item.word);
-                }}
+                className="flex justify-between items-center px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-800 text-sm text-gray-800 dark:text-gray-200"
+                onClick={() => handleSelectHistory(item.word)} // CAMBIO de onMouseDown a onClick
               >
-                {item.word}
-                <span className="ml-2 text-xs text-gray-400">
-                  {new Date(item.timestamp).toLocaleString()}
-                </span>
+                <span>{item.word}</span>
+
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-gray-400 whitespace-nowrap">
+                    {new Date(item.timestamp).toLocaleString()}
+                  </span>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveHistoryItem(item.word);
+                    }}
+                    className="p-1 hover:text-red-600 dark:hover:text-red-400 cursor-pointer"
+                    aria-label={`Remove ${item.word} from history`}
+                    type="button"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
               </li>
             ))}
           </ul>

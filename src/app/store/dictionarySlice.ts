@@ -49,12 +49,19 @@ const dictionarySlice = createSlice({
   reducers: {
     clearHistory(state) {
       state.history = [];
+      localStorage.removeItem("searchHistory");
     },
     setHistoryFromStorage(
       state,
       action: PayloadAction<DictionaryState["history"]>
     ) {
       state.history = action.payload;
+    },
+    removeHistoryItem(state, action: PayloadAction<string>) {
+      state.history = state.history.filter(
+        (item) => item.word !== action.payload
+      );
+      localStorage.setItem("searchHistory", JSON.stringify(state.history));
     },
   },
   extraReducers: (builder) => {
@@ -75,6 +82,7 @@ const dictionarySlice = createSlice({
               (item) => item.word !== action.payload.word
             ),
           ].slice(0, 10);
+          localStorage.setItem("searchHistory", JSON.stringify(state.history));
         }
       )
       .addCase(fetchWord.rejected, (state, action: PayloadAction<any>) => {
@@ -84,5 +92,6 @@ const dictionarySlice = createSlice({
   },
 });
 
-export const { clearHistory, setHistoryFromStorage } = dictionarySlice.actions;
+export const { clearHistory, setHistoryFromStorage, removeHistoryItem } =
+  dictionarySlice.actions;
 export default dictionarySlice.reducer;
