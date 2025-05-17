@@ -9,12 +9,9 @@ interface ThemeState {
   font: Font;
 }
 
+// Evita usar `window` aquí para prevenir hydration mismatch
 const initialState: ThemeState = {
-  theme:
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light",
+  theme: "light", // valor estático seguro para SSR
   font: "serif",
 };
 

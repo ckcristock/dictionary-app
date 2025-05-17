@@ -7,6 +7,7 @@ import React, { useState } from "react";
 
 import { useAppSelector, useAppDispatch } from "@/app/hooks/redux";
 import { setFont } from "@/app/store/themeSlice";
+import { fetchWord } from "@/app/store/dictionarySlice";
 import type { Font } from "@/app/store/themeSlice";
 
 const fontOptions: { label: string; value: Font }[] = [
@@ -19,11 +20,16 @@ export default function HomePage() {
   const dispatch = useAppDispatch();
   const font = useAppSelector((state) => state.theme.font);
 
+  const [search, setSearch] = useState("keyboard");
+
   const handleSetFont = (newFont: Font) => {
     dispatch(setFont(newFont));
   };
 
-  const [search, setSearch] = useState("keyboard");
+  const handleSearch = () => {
+    if (!search.trim()) return;
+    dispatch(fetchWord(search));
+  };
 
   return (
     <main
@@ -34,13 +40,17 @@ export default function HomePage() {
 
       {/* Search input */}
       <SearchBar
-        search={search}
-        setSearch={setSearch}
-        onSearch={() => alert("Searching for: " + search)}
+        search={""}
+        setSearch={function (value: string): void {
+          throw new Error("Function not implemented.");
+        }}
+        onSearch={function (): void {
+          throw new Error("Function not implemented.");
+        }}
       />
 
       {/* Results */}
-      <Results search={search} />
+      <Results />
 
       {/* Test Tailwind */}
       <div className="bg-red-500 text-white p-4 rounded mt-4">

@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 
 type SearchBarProps = {
@@ -18,9 +17,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
       <input
         type="search"
         placeholder="Search word..."
-        className={`w-full rounded-xl px-5 py-3 text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600`}
+        className="w-full rounded-xl px-5 py-3 text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") onSearch();
+        }}
       />
       <button
         aria-label="Search"

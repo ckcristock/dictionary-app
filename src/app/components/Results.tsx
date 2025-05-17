@@ -1,62 +1,69 @@
 "use client";
+
 import React from "react";
+import { useAppSelector } from "@/app/hooks/redux";
 import WordHeader from "./WordHeader";
 import DefinitionGroup from "./DefinitionGroup";
 
-type ResultsProps = {
-  search: string;
-};
+const Results: React.FC = () => {
+  const { result, loading, error } = useAppSelector(
+    (state) => state.dictionary
+  );
 
-const Results: React.FC<ResultsProps> = ({ search }) => {
-  if (!search) return null;
+  if (loading)
+    return (
+      <div className="text-center text-neutral-500 italic mt-8">Loading...</div>
+    );
 
-  // Mock de data (luego vendrá de API)
-  const data = {
-    phonetic: "/ˈkiːbɔːrd/",
-    noun: {
-      meanings: [
-        "A set of keys used to operate a typewriter, computer etc.",
-        "A component of many instruments including the piano, organ, and harpsichord...",
-        "A device with keys of a musical keyboard, used to control electronic sound devices.",
-      ],
-      synonyms: ["electronic keyboard"],
-    },
-    verb: {
-      meanings: ["To type on a computer keyboard."],
-      quote: "“Keyboarding is the part of this job I hate the most.”",
-    },
+  if (error)
+    return <div className="text-center text-red-500 italic mt-8">{error}</div>;
+
+  if (!result)
+    return (
+      <div className="text-center text-neutral-500 italic mt-8">
+        No word searched yet.
+      </div>
+    );
+
+  const phonetic = result.phonetic || result.phonetics?.[0]?.text || "";
+  const audioUrl = result.phonetics?.find((p) => p.audio)?.audio;
+
+  const handlePlayAudio = () => {
+    if (audioUrl) {
+      const audio = new Audio(audioUrl);
+      audio.play();
+    }
   };
 
   return (
     <article className="flex-grow">
       <WordHeader
-        word={search}
-        phonetic={data.phonetic}
-        onPlay={() => alert("Playing pronunciation for: " + search)}
+        word={result.word}
+        phonetic={phonetic}
+        onPlay={handlePlayAudio}
       />
 
       <section className="space-y-6">
-        <DefinitionGroup
-          partOfSpeech="noun"
-          meanings={data.noun.meanings}
-          synonyms={data.noun.synonyms}
-        />
-        <DefinitionGroup
-          partOfSpeech="verb"
-          meanings={data.verb.meanings}
-          quote={data.verb.quote}
-        />
+        {result.meanings.map((meaning, idx) => (
+          <DefinitionGroup
+            key={`${meaning.partOfSpeech}-${idx}`}
+            partOfSpeech={meaning.partOfSpeech}
+            meanings={meaning.definitions.map((d) => d.definition)}
+            synonyms={meaning.definitions.flatMap((d) => d.synonyms || [])}
+            quote={meaning.definitions.find((d) => d.example)?.example}
+          />
+        ))}
       </section>
 
       <footer className="mt-10 text-sm text-gray-400 dark:text-gray-500">
         Source{" "}
         <a
-          href={`https://en.wiktionary.org/wiki/${search}`}
+          href={result.sourceUrls[0]}
           target="_blank"
           rel="noopener noreferrer"
           className="underline hover:text-purple-600"
         >
-          https://en.wiktionary.org/wiki/{search}
+          {result.sourceUrls[0]}
         </a>
       </footer>
     </article>
