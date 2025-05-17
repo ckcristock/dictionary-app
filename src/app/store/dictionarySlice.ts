@@ -24,7 +24,7 @@ const initialState: DictionaryState = {
   loading: false,
   error: null,
   result: null,
-  history: [],
+  history: [], // se cargará desde localStorage en un useEffect en el cliente
 };
 
 export const fetchWord = createAsyncThunk(
@@ -46,7 +46,17 @@ export const fetchWord = createAsyncThunk(
 const dictionarySlice = createSlice({
   name: "dictionary",
   initialState,
-  reducers: {},
+  reducers: {
+    clearHistory(state) {
+      state.history = [];
+    },
+    setHistoryFromStorage(
+      state,
+      action: PayloadAction<DictionaryState["history"]>
+    ) {
+      state.history = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchWord.pending, (state) => {
@@ -59,10 +69,12 @@ const dictionarySlice = createSlice({
         (state, action: PayloadAction<DictionaryEntry>) => {
           state.loading = false;
           state.result = action.payload;
-          state.history.unshift({
-            word: action.payload.word,
-            timestamp: new Date().toISOString(),
-          });
+          state.history = [
+            { word: action.payload.word, timestamp: new Date().toISOString() },
+            ...state.history.filter(
+              (item) => item.word !== action.payload.word
+            ),
+          ].slice(0, 10);
         }
       )
       .addCase(fetchWord.rejected, (state, action: PayloadAction<any>) => {
@@ -72,4 +84,5 @@ const dictionarySlice = createSlice({
   },
 });
 
+export const { clearHistory, setHistoryFromStorage } = dictionarySlice.actions;
 export default dictionarySlice.reducer;
