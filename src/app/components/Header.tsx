@@ -3,7 +3,9 @@
 import React from "react";
 import ThemeToggle from "./ThemeToggle";
 import { useAppSelector } from "@/app/hooks/redux";
-import type { Font } from "@/app/store/themeSlice"; // Ajusta según tu estructura
+import type { Font } from "@/app/store/themeSlice";
+import Image from "next/image";
+import libroIcon from "../assets/libro100.png"; // Usa @ si tienes alias, o usa ../assets/libro100.png
 
 type FontOption = { label: string; value: Font };
 
@@ -25,23 +27,10 @@ const Header: React.FC<HeaderProps> = ({
   const theme = useAppSelector((state) => state.theme.theme);
 
   return (
-    <header className="flex justify-between items-center mb-6">
+    <header className="flex justify-between items-center mb-6 pt-9">
       <div className="text-3xl font-bold cursor-pointer select-none">
         {/* Icon libro simple */}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={2}
-          stroke="currentColor"
-          className="w-10 h-10"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 6v12m-6-6h12"
-          />
-        </svg>
+        <Image src={libroIcon} alt="Libro Icon" width={40} height={40} />
       </div>
 
       <div className="flex items-center space-x-6">
