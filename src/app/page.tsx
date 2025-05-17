@@ -40,22 +40,13 @@ export default function HomePage() {
 
       {/* Search input */}
       <SearchBar
-        search={""}
-        setSearch={function (value: string): void {
-          throw new Error("Function not implemented.");
-        }}
-        onSearch={function (): void {
-          throw new Error("Function not implemented.");
-        }}
+        search={search}
+        setSearch={setSearch}
+        onSearch={handleSearch}
       />
 
       {/* Results */}
       <Results />
-
-      {/* Test Tailwind */}
-      <div className="bg-red-500 text-white p-4 rounded mt-4">
-        Esto debe verse rojo si Tailwind está funcionando.
-      </div>
     </main>
   );
 }
