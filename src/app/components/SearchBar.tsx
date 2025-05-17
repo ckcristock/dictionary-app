@@ -126,7 +126,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
       <button
         aria-label="Search"
-        className="absolute right-4 top-1/2 -translate-y-1/2 hover:opacity-80"
+        className="absolute right-4 top-1/2 -translate-y-1/2 hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 rounded"
         onClick={handleSearch}
         type="button"
       >
@@ -161,7 +161,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                       e.stopPropagation();
                       handleRemoveHistoryItem(item.word);
                     }}
-                    className="p-1 hover:text-red-600 dark:hover:text-red-400 cursor-pointer"
+                    className="p-1 hover:text-red-600 dark:hover:text-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 rounded cursor-pointer"
                     aria-label={`Remove ${item.word} from history`}
                     type="button"
                   >
@@ -178,7 +178,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 e.preventDefault();
                 dispatch(clearHistory());
               }}
-              className="flex items-center gap-2 text-xs font-medium text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors cursor-pointer"
+              className="flex items-center gap-2 text-xs font-medium text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 rounded transition-colors cursor-pointer"
               type="button"
             >
               <Trash2 size={14} /> Clear history
