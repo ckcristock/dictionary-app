@@ -116,6 +116,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       "fuck",
       "cock",
       "pussy",
+      "bitch",
       "dick",
       "anal",
       "cunnilingus",
