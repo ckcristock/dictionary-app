@@ -61,7 +61,7 @@ const Results: React.FC = () => {
           href={result.sourceUrls[0]}
           target="_blank"
           rel="noopener noreferrer"
-          className="underline hover:text-purple-600"
+          className="underline hover:text-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400 rounded"
         >
           {result.sourceUrls[0]}
         </a>
