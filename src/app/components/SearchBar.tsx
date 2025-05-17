@@ -69,12 +69,74 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   const handleSearch = () => {
-    if (!search.trim()) {
+    const raw = search.trim();
+
+    // 1. No vacío
+    if (!raw) {
       setError("Please enter a word to search.");
       return;
     }
+
+    // 2. Longitud mínima y máxima
+    if (raw.length < 2) {
+      setError("Please enter at least 2 characters.");
+      return;
+    }
+    if (raw.length > 30) {
+      setError("Please enter no more than 30 characters.");
+      return;
+    }
+
+    // 3. Sólo letras, espacios, apóstrofos y guiones
+    const ALPHA = /^[A-Za-zÀ-ÿñÑ\s'-]+$/;
+    if (!ALPHA.test(raw)) {
+      setError("Please use only letters, spaces, apostrophes or hyphens.");
+      return;
+    }
+
+    // 4. Sin múltiples espacios o guiones consecutivos
+    if (/\s{2,}/.test(raw) || /-{2,}/.test(raw)) {
+      setError("Avoid multiple consecutive spaces or hyphens.");
+      return;
+    }
+
+    // 5. Normalizar
+    const normalized = raw
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+
+    // 6. Filtrado de “bad words" comparando tokens directos
+    const blacklist = new Set([
+      "nigger",
+      "faggot",
+      "chink",
+      "kike",
+      "spic",
+      "fuck",
+      "cock",
+      "pussy",
+      "dick",
+      "anal",
+      "cunnilingus",
+      "rape",
+      "torture",
+      "murder",
+      "cocaine",
+      "heroin",
+      "meth",
+      "lsd",
+    ]);
+    const tokens = normalized.match(/\b[a-z0-9'-]+\b/g) || [];
+    if (tokens.some((token) => blacklist.has(token))) {
+      setError("Your search contains prohibited terms.");
+      return;
+    }
+
+    // 7. Pasó todas las validaciones
     setError("");
-    onSearch();
+    setSearch(normalized);
+    onSearch(normalized);
     setShowSuggestions(false);
   };
 
@@ -103,24 +165,20 @@ const SearchBar: React.FC<SearchBarProps> = ({
     const currentIndex = focusables.findIndex(
       (el) => el === document.activeElement
     );
-    // determine next index
     let next = e.shiftKey ? currentIndex - 1 : currentIndex + 1;
 
-    // forward tab past last -> search button
     if (!e.shiftKey && next >= focusables.length) {
       e.preventDefault();
       setShowSuggestions(false);
       searchBtnRef.current?.focus();
       return;
     }
-    // backward tab before first -> search button
     if (e.shiftKey && next < 0) {
       e.preventDefault();
       setShowSuggestions(false);
       searchBtnRef.current?.focus();
       return;
     }
-    // wrap within suggestions
     if (next < 0) next = focusables.length - 1;
     if (next >= focusables.length) next = 0;
 
@@ -149,7 +207,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
           if (e.key === "Enter") handleSearch();
         }}
       />
-
       <button
         ref={searchBtnRef}
         aria-label="Search"
@@ -161,9 +218,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         <Search size={20} color="black" className="block dark:hidden" />
         <Search size={20} color="white" className="hidden dark:block" />
       </button>
-
       {error && <p className="text-red-500 text-sm mt-2 pl-1">{error}</p>}
-
       {showSuggestions && filteredHistory.length > 0 && (
         <div
           ref={suggestionsRef}
@@ -187,11 +242,17 @@ const SearchBar: React.FC<SearchBarProps> = ({
                   <span className="text-xs text-gray-400 whitespace-nowrap">
                     {new Date(item.timestamp).toLocaleString()}
                   </span>
-
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleRemoveHistoryItem(item.word);
+                    }}
+                    onKeyDown={(e) => {
+                      e.stopPropagation();
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        handleRemoveHistoryItem(item.word);
+                      }
                     }}
                     className="p-1 hover:text-red-600 dark:hover:text-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 rounded cursor-pointer"
                     aria-label={`Remove ${item.word} from history`}
@@ -203,13 +264,18 @@ const SearchBar: React.FC<SearchBarProps> = ({
               </li>
             ))}
           </ul>
-
           <div className="flex justify-end px-3 py-2 border-t border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800">
             <button
               tabIndex={0}
               onMouseDown={(e) => {
                 e.preventDefault();
                 dispatch(clearHistory());
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  dispatch(clearHistory());
+                }
               }}
               className="flex items-center gap-2 text-xs font-medium text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 rounded transition-colors cursor-pointer"
               type="button"
