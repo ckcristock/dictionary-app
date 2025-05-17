@@ -46,30 +46,26 @@ const SearchBar: React.FC<SearchBarProps> = ({
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setShowSuggestions(false);
+        inputRef.current?.focus();
       }
     };
     if (showSuggestions) {
       window.addEventListener("keydown", handleEsc);
-    } else {
-      window.removeEventListener("keydown", handleEsc);
     }
     return () => window.removeEventListener("keydown", handleEsc);
   }, [showSuggestions]);
 
-  const handleBlur = (e: React.FocusEvent) => {
-    if (
-      suggestionsRef.current &&
-      suggestionsRef.current.contains(e.relatedTarget as Node)
-    ) {
-      return;
-    }
-    if (
-      inputRef.current &&
-      inputRef.current.contains(e.relatedTarget as Node)
-    ) {
-      return;
-    }
-    setShowSuggestions(false);
+  const handleBlur = () => {
+    requestAnimationFrame(() => {
+      const active = document.activeElement;
+      if (
+        suggestionsRef.current?.contains(active) ||
+        inputRef.current?.contains(active)
+      ) {
+        return;
+      }
+      setShowSuggestions(false);
+    });
   };
 
   const handleSearch = () => {
@@ -99,6 +95,32 @@ const SearchBar: React.FC<SearchBarProps> = ({
           item.word.toLowerCase().includes(search.toLowerCase())
         );
 
+  const handleSuggestionKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Tab" && suggestionsRef.current) {
+      const focusables = Array.from(
+        suggestionsRef.current.querySelectorAll(
+          'li[tabindex="0"], li[tabindex="0"] button, div[role="button"]'
+        )
+      ) as HTMLElement[];
+      const currentIndex = focusables.findIndex(
+        (el) => el === document.activeElement
+      );
+      let next = e.shiftKey ? currentIndex - 1 : currentIndex + 1;
+
+      if (next < 0) next = focusables.length - 1;
+      if (next >= focusables.length) {
+        // exit suggestions back to search input
+        e.preventDefault();
+        setShowSuggestions(false);
+        inputRef.current?.focus();
+        return;
+      }
+
+      e.preventDefault();
+      focusables[next].focus();
+    }
+  };
+
   return (
     <div className="mb-10 w-full relative">
       <input
@@ -110,14 +132,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
         }`}
         value={search}
         onChange={(e) => {
-          const value = e.target.value;
-          setSearch(value);
+          setSearch(e.target.value);
           if (error) setError("");
           setShowSuggestions(true);
         }}
-        onFocus={() => {
-          setShowSuggestions(true);
-        }}
+        onFocus={() => setShowSuggestions(true)}
         onBlur={handleBlur}
         onKeyDown={(e) => {
           if (e.key === "Enter") handleSearch();
@@ -126,6 +145,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
       <button
         aria-label="Search"
+        tabIndex={showSuggestions ? -1 : 0}
         className="absolute right-4 top-1/2 -translate-y-1/2 hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 rounded cursor-pointer"
         onClick={handleSearch}
         type="button"
@@ -140,17 +160,21 @@ const SearchBar: React.FC<SearchBarProps> = ({
         <div
           ref={suggestionsRef}
           tabIndex={-1}
+          onKeyDown={handleSuggestionKeyDown}
           className="absolute left-0 right-0 mt-1 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-xl shadow-md z-10 max-h-60 overflow-y-auto"
         >
           <ul>
             {filteredHistory.map((item, idx) => (
               <li
                 key={idx}
-                className="flex justify-between items-center px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-800 text-sm text-gray-800 dark:text-gray-200"
-                onClick={() => handleSelectHistory(item.word)} // CAMBIO de onMouseDown a onClick
+                tabIndex={0}
+                className="flex justify-between items-center px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-800 text-sm text-gray-800 dark:text-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 rounded"
+                onClick={() => handleSelectHistory(item.word)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleSelectHistory(item.word);
+                }}
               >
                 <span>{item.word}</span>
-
                 <div className="flex items-center gap-3">
                   <span className="text-xs text-gray-400 whitespace-nowrap">
                     {new Date(item.timestamp).toLocaleString()}
@@ -174,6 +198,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
           <div className="flex justify-end px-3 py-2 border-t border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800">
             <button
+              tabIndex={0}
               onMouseDown={(e) => {
                 e.preventDefault();
                 dispatch(clearHistory());
