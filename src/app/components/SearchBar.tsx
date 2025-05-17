@@ -8,7 +8,7 @@ import { clearHistory, setHistoryFromStorage } from "../store/dictionarySlice";
 type SearchBarProps = {
   search: string;
   setSearch: (value: string) => void;
-  onSearch: () => void;
+  onSearch: (term?: string) => void;
 };
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -19,6 +19,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const [error, setError] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
   const history = useSelector((state: RootState) => state.dictionary.history);
@@ -51,6 +52,24 @@ const SearchBar: React.FC<SearchBarProps> = ({
     return () => window.removeEventListener("keydown", handleEsc);
   }, [showSuggestions]);
 
+  // Nuevo handler para evitar que blur cierre la lista antes del click
+  const handleBlur = (e: React.FocusEvent) => {
+    // Si el nuevo foco está dentro del contenedor de sugerencias o input, no cerramos
+    if (
+      suggestionsRef.current &&
+      suggestionsRef.current.contains(e.relatedTarget as Node)
+    ) {
+      return;
+    }
+    if (
+      inputRef.current &&
+      inputRef.current.contains(e.relatedTarget as Node)
+    ) {
+      return;
+    }
+    setShowSuggestions(false);
+  };
+
   const handleSearch = () => {
     if (!search.trim()) {
       setError("Please enter a word to search.");
@@ -64,11 +83,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   const handleSelectHistory = (word: string) => {
     setSearch(word);
-    onSearch();
     setShowSuggestions(false);
+    onSearch(word);
   };
 
-  // Aquí filtramos el historial según search (case insensitive)
   const filteredHistory =
     search.trim() === ""
       ? history
@@ -95,7 +113,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         onFocus={() => {
           setShowSuggestions(true);
         }}
-        onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
+        onBlur={handleBlur}
         onKeyDown={(e) => {
           if (e.key === "Enter") handleSearch();
         }}
@@ -114,13 +132,20 @@ const SearchBar: React.FC<SearchBarProps> = ({
       {error && <p className="text-red-500 text-sm mt-2 pl-1">{error}</p>}
 
       {showSuggestions && filteredHistory.length > 0 && (
-        <div className="absolute left-0 right-0 mt-1 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-xl shadow-md z-10 max-h-60 overflow-y-auto">
+        <div
+          ref={suggestionsRef}
+          tabIndex={-1} // para que pueda recibir focus si es necesario
+          className="absolute left-0 right-0 mt-1 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-xl shadow-md z-10 max-h-60 overflow-y-auto"
+        >
           <ul>
             {filteredHistory.map((item, idx) => (
               <li
                 key={idx}
                 className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-800 text-sm text-gray-800 dark:text-gray-200"
-                onClick={() => handleSelectHistory(item.word)}
+                onMouseDown={(e) => {
+                  e.preventDefault(); // evitar que el blur se dispare antes
+                  handleSelectHistory(item.word);
+                }}
               >
                 {item.word}
                 <span className="ml-2 text-xs text-gray-400">

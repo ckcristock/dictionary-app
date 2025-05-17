@@ -26,9 +26,11 @@ export default function HomePage() {
     dispatch(setFont(newFont));
   };
 
-  const handleSearch = () => {
-    if (!search.trim()) return;
-    dispatch(fetchWord(search));
+  const handleSearch = (term?: string) => {
+    const wordToSearch = term ?? search;
+    if (!wordToSearch.trim()) return;
+    setSearch(wordToSearch);
+    dispatch(fetchWord(wordToSearch));
   };
 
   return (
