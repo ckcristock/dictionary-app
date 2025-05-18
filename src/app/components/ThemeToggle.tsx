@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/app/hooks/redux";
-import { toggleTheme } from "@/app/store/themeSlice";
+import { useAppDispatch, useAppSelector } from "../hooks/redux";
+import { toggleTheme } from "../store/themeSlice";
 
 export default function ThemeToggle() {
   const dispatch = useAppDispatch();

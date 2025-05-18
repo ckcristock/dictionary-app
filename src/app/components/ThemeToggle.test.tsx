@@ -2,8 +2,8 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import ThemeToggle from "./ThemeToggle";
 import { Provider } from "react-redux";
 import { store } from "../store";
-import * as redux from "@/app/hooks/redux";
-import { toggleTheme } from "@/app/store/themeSlice";
+import * as redux from "../hooks/redux";
+import { toggleTheme } from "../store/themeSlice";
 
 const renderWithProviders = (ui: React.ReactElement) => {
   return render(<Provider store={store}>{ui}</Provider>);
