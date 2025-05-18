@@ -257,7 +257,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       >
         <Search
           size={20}
-          className={theme === "dark" ? "text-white" : "text-black"}
+          className={theme === "light" ? "text-[#c7a8db]" : "text-white"}
         />
       </button>
 
