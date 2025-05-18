@@ -5,7 +5,7 @@ import ThemeToggle from "./ThemeToggle";
 import { useAppSelector } from "@/app/hooks/redux";
 import type { Font } from "@/app/store/themeSlice";
 import Image from "next/image";
-import libroIcon from "../assets/libro100.png"; // Usa @ si tienes alias, o usa ../assets/libro100.png
+import libroIcon from "../assets/libro100.png";
 
 type FontOption = { label: string; value: Font };
 
@@ -27,20 +27,24 @@ const Header: React.FC<HeaderProps> = ({
   const theme = useAppSelector((state) => state.theme.theme);
 
   return (
-    <header className="flex justify-between items-center mb-6 pt-9">
-      <button
-        className="text-3xl font-bold cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 rounded transition"
-        aria-label="Go to home"
-        type="button"
-      >
-        <Image src={libroIcon} alt="Libro Icon" width={40} height={40} />
-      </button>
-
-      <div className="flex items-center space-x-6">
+    <header className="flex justify-between items-center mb-6 pt-0 mt-0 md:px-0">
+      <div className="flex items-center">
+        <button
+          className="text-3xl font-bold cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 rounded transition mr-4" // Added right margin
+          aria-label="Go to home"
+          type="button"
+        >
+          <Image src={libroIcon} alt="Libro Icon" width={40} height={40} />
+        </button>
+      </div>
+      <div className="flex items-center space-x-4">
+        {" "}
+        {/* Reduced space-x for mobile */}
         {/* Font selector */}
         <select
           aria-label="Select font"
-          className={`rounded px-3 py-1 cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 transition-colors ${
+          className={`rounded px-3 py-1 cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 transition-colors text-sm ${
+            // Reduced font size
             theme === "dark"
               ? "bg-gray-800 text-gray-100"
               : "bg-[#f4f4f4] text-black"
@@ -52,15 +56,13 @@ const Header: React.FC<HeaderProps> = ({
           }}
         >
           {fonts.map((f) => (
-            <option key={f.value} value={f.value}>
+            <option key={f.value} value={f.value} className="text-sm">
               {f.label}
             </option>
           ))}
         </select>
-
         {/* Toggle dark mode */}
         <ThemeToggle />
-
         {/* Moon icon */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -68,7 +70,7 @@ const Header: React.FC<HeaderProps> = ({
           viewBox="0 0 24 24"
           strokeWidth={2}
           stroke="currentColor"
-          className="w-6 h-6"
+          className="w-5 h-5" // Reduced size for mobile
         >
           <path
             strokeLinecap="round"

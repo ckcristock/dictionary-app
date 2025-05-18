@@ -15,6 +15,53 @@ type SearchBarProps = {
   onSearch: (term?: string) => void;
 };
 
+const validateSearch = (term: string): string | null => {
+  const raw = term.trim();
+  if (!raw) return "Please enter a word to search.";
+  if (raw.length < 2) return "Please enter at least 2 characters.";
+  if (raw.length > 30) return "Please enter no more than 30 characters.";
+
+  const ALPHA = /^[A-Za-zÀ-ÿñÑ\s'-]+$/;
+  if (!ALPHA.test(raw))
+    return "Please use only letters, spaces, apostrophes or hyphens.";
+  if (/\s{2,}/.test(raw) || /-{2,}/.test(raw))
+    return "Avoid multiple consecutive spaces or hyphens.";
+
+  const normalized = raw
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+
+  const blacklist = new Set([
+    "nigger",
+    "faggot",
+    "chink",
+    "kike",
+    "spic",
+    "fuck",
+    "cock",
+    "pussy",
+    "bitch",
+    "dick",
+    "anal",
+    "cunnilingus",
+    "rape",
+    "torture",
+    "murder",
+    "cocaine",
+    "heroin",
+    "meth",
+    "lsd",
+  ]);
+
+  const tokens = normalized.match(/\b[a-z0-9'-]+\b/g) || [];
+  if (tokens.some((token) => blacklist.has(token))) {
+    return "Your search contains prohibited terms.";
+  }
+
+  return null;
+};
+
 const SearchBar: React.FC<SearchBarProps> = ({
   search,
   setSearch,
@@ -54,87 +101,19 @@ const SearchBar: React.FC<SearchBarProps> = ({
     return () => window.removeEventListener("keydown", handleEsc);
   }, [showSuggestions]);
 
-  const handleBlur = () => {
-    requestAnimationFrame(() => {
-      const active = document.activeElement;
-      if (
-        suggestionsRef.current?.contains(active) ||
-        inputRef.current?.contains(active) ||
-        searchBtnRef.current?.contains(active)
-      ) {
-        return;
-      }
-      setShowSuggestions(false);
-    });
-  };
-
   const handleSearch = () => {
-    const raw = search.trim();
-
-    // 1. No vacío
-    if (!raw) {
-      setError("Please enter a word to search.");
+    const errorMsg = validateSearch(search);
+    if (errorMsg) {
+      setError(errorMsg);
       return;
     }
 
-    // 2. Longitud mínima y máxima
-    if (raw.length < 2) {
-      setError("Please enter at least 2 characters.");
-      return;
-    }
-    if (raw.length > 30) {
-      setError("Please enter no more than 30 characters.");
-      return;
-    }
-
-    // 3. Sólo letras, espacios, apóstrofos y guiones
-    const ALPHA = /^[A-Za-zÀ-ÿñÑ\s'-]+$/;
-    if (!ALPHA.test(raw)) {
-      setError("Please use only letters, spaces, apostrophes or hyphens.");
-      return;
-    }
-
-    // 4. Sin múltiples espacios o guiones consecutivos
-    if (/\s{2,}/.test(raw) || /-{2,}/.test(raw)) {
-      setError("Avoid multiple consecutive spaces or hyphens.");
-      return;
-    }
-
-    // 5. Normalizar
-    const normalized = raw
+    const normalized = search
+      .trim()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase();
 
-    // 6. Filtrado de “bad words" comparando tokens directos
-    const blacklist = new Set([
-      "nigger",
-      "faggot",
-      "chink",
-      "kike",
-      "spic",
-      "fuck",
-      "cock",
-      "pussy",
-      "bitch",
-      "dick",
-      "anal",
-      "cunnilingus",
-      "rape",
-      "torture",
-      "murder",
-      "cocaine",
-      "heroin",
-      "meth",
-      "lsd",
-    ]);
-    const tokens = normalized.match(/\b[a-z0-9'-]+\b/g) || [];
-    if (tokens.some((token) => blacklist.has(token))) {
-      setError("Your search contains prohibited terms.");
-      return;
-    }
-
-    // 7. Pasó todas las validaciones
     setError("");
     setSearch(normalized);
     onSearch(normalized);
@@ -157,6 +136,19 @@ const SearchBar: React.FC<SearchBarProps> = ({
       : history.filter((item) =>
           item.word.toLowerCase().includes(search.toLowerCase())
         );
+
+  const handleBlur = () => {
+    requestAnimationFrame(() => {
+      const active = document.activeElement;
+      if (
+        suggestionsRef.current?.contains(active) ||
+        inputRef.current?.contains(active) ||
+        searchBtnRef.current?.contains(active)
+      )
+        return;
+      setShowSuggestions(false);
+    });
+  };
 
   const handleSuggestionKeyDown = (e: React.KeyboardEvent) => {
     if (e.key !== "Tab" || !suggestionsRef.current) return;
@@ -188,12 +180,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <div className="mb-10 w-full relative">
+    <div className="relative w-full max-w-2xl mx-auto px-3 sm:px-6">
       <input
         ref={inputRef}
         type="text"
         placeholder="Search word..."
-        className={`w-full rounded-xl px-5 py-3 text-lg shadow-sm focus:outline-none focus:ring-2 ${
+        className={`w-full rounded-xl px-5 py-3 text-base sm:text-lg shadow-sm focus:outline-none focus:ring-2 ${
           error ? "ring-2 ring-red-500" : "focus:ring-purple-600"
         }`}
         value={search}
@@ -216,8 +208,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         onClick={handleSearch}
         type="button"
       >
-        <Search size={20} color="black" className="block dark:hidden" />
-        <Search size={20} color="white" className="hidden dark:block" />
+        <Search size={20} className="text-black dark:text-white" />
       </button>
       {error && <p className="text-red-500 text-sm mt-2 pl-1">{error}</p>}
       {showSuggestions && filteredHistory.length > 0 && (
@@ -225,14 +216,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
           ref={suggestionsRef}
           tabIndex={-1}
           onKeyDown={handleSuggestionKeyDown}
-          className="absolute left-0 right-0 mt-1 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-xl shadow-md z-10 max-h-60 overflow-y-auto"
+          className="absolute left-0 right-0 mt-1 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-xl shadow-md z-10 max-h-60 overflow-y-auto text-sm sm:text-base"
         >
           <ul>
-            {filteredHistory.map((item, idx) => (
+            {filteredHistory.map((item) => (
               <li
-                key={idx}
+                key={item.word}
                 tabIndex={0}
-                className="flex justify-between items-center px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-800 text-sm text-gray-800 dark:text-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 rounded"
+                className="flex justify-between items-center px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-800 text-gray-800 dark:text-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 rounded"
                 onClick={() => handleSelectHistory(item.word)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleSelectHistory(item.word);
