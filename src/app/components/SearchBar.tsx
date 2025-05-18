@@ -75,7 +75,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
-  const { theme } = useSelector((state: RootState) => state.theme); // Get the current theme
+  const { theme } = useSelector((state: RootState) => state.theme);
   const history = useSelector((state: RootState) => state.dictionary.history);
 
   useEffect(() => {
@@ -182,7 +182,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <div className="relative w-full max-w-2xl mx-auto px-3 sm:px-6">
+    <div className="relative w-full mx-auto px-3 sm:px-6">
       <input
         ref={inputRef}
         type="text"
@@ -212,7 +212,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       >
         <Search
           size={20}
-          className={theme === "dark" ? "text-white" : "text-black"} // Apply theme color
+          className={theme === "dark" ? "text-white" : "text-black"}
         />
       </button>
       {error && <p className="text-red-500 text-sm mt-2 pl-1">{error}</p>}
@@ -221,14 +221,22 @@ const SearchBar: React.FC<SearchBarProps> = ({
           ref={suggestionsRef}
           tabIndex={-1}
           onKeyDown={handleSuggestionKeyDown}
-          className="absolute left-0 right-0 mt-1 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-xl shadow-md z-10 max-h-60 overflow-y-auto text-sm sm:text-base"
+          className={`absolute left-0 right-0 mt-1 rounded-xl shadow-md z-10 max-h-60 overflow-y-auto text-sm sm:text-base ${
+            theme === "dark"
+              ? "bg-zinc-900 border border-zinc-700"
+              : "bg-white border border-gray-300"
+          }`}
         >
           <ul>
             {filteredHistory.map((item) => (
               <li
                 key={item.word}
                 tabIndex={0}
-                className="flex justify-between items-center px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-800 text-gray-800 dark:text-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 rounded"
+                className={`flex justify-between items-center px-4 py-2 cursor-pointer rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 ${
+                  theme === "dark"
+                    ? "text-gray-200 hover:bg-zinc-800"
+                    : "text-gray-800 hover:bg-gray-100"
+                }`}
                 onClick={() => handleSelectHistory(item.word)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleSelectHistory(item.word);
@@ -251,7 +259,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                         handleRemoveHistoryItem(item.word);
                       }
                     }}
-                    className="p-1 hover:text-red-600 dark:hover:text-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 rounded cursor-pointer"
+                    className="p-1 hover:text-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 rounded cursor-pointer"
                     aria-label={`Remove ${item.word} from history`}
                     type="button"
                   >
@@ -261,7 +269,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
               </li>
             ))}
           </ul>
-          <div className="flex justify-end px-3 py-2 border-t border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800">
+          <div
+            className={`flex justify-end px-3 py-2 border-t ${
+              theme === "dark"
+                ? "border-zinc-700 bg-zinc-800"
+                : "border-gray-200 bg-gray-50"
+            }`}
+          >
             <button
               tabIndex={0}
               onMouseDown={(e) => {
@@ -274,7 +288,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                   dispatch(clearHistory());
                 }
               }}
-              className="flex items-center gap-2 text-xs font-medium text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 rounded transition-colors cursor-pointer"
+              className="flex items-center gap-2 text-xs font-medium text-red-600 hover:text-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 rounded transition-colors cursor-pointer"
               type="button"
             >
               <Trash2 size={14} /> Clear history
