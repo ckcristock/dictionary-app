@@ -18,8 +18,8 @@ const DefinitionGroup: React.FC<DefinitionGroupProps> = ({
       </h2>
       <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
     </div>
-    <p className="mb-2 text-[#c4c4c4]">Meaning</p>
-    <ul className="list-disc pl-5 space-y-1 text-gray-700 dark:text-gray-300">
+    <p className="mb-2 text-[#aeb6d0]">Meaning</p>
+    <ul className="list-disc pl-5 space-y-1">
       {meanings.map((m, i) => (
         <li key={i}>{m}</li>
       ))}
