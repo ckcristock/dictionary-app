@@ -20,7 +20,10 @@ const DefinitionGroup: React.FC<DefinitionGroupProps> = ({
           {partOfSpeech}
         </h2>
         {isFirst && (
-          <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
+          <div
+            className="flex-1 h-px dark:bg-gray-600"
+            style={{ backgroundColor: "#dbdbdb" }}
+          ></div>
         )}
       </div>
     </div>
