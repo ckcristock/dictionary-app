@@ -25,7 +25,7 @@ export default function RootLayout({
       >
         <ClientProviders>
           <FontWrapper>
-            <main className="flex flex-col items-center px-1 md:px-6 pt-0 md:mt-4 pb-4 md:pb-6 max-w-3xl mx-auto">
+            <main className="flex flex-col items-center p-0 md:m-0 lg:p-0">
               <section className="w-full">{children}</section>
             </main>
           </FontWrapper>

@@ -34,7 +34,7 @@ export default function HomePage() {
 
   return (
     <main
-      className={`max-w-5xl mx-auto px-5 pt-6 pb-8 md:px-4 md:py-4 lg:px-8 lg:py-8 font-${font} flex flex-col bg-green-500`}
+      className={`max-w-5xl mx-auto p-0 px-6 mt-6 pb-16 md:p-0 md:mx-8 md:mt-10 lg:mx-auto lg:px-48 lg:mt-11 font-${font} flex flex-col`}
     >
       {/* Header: Icon + Controls */}
       <Header fonts={fontOptions} font={font} setFont={handleSetFont} />
