@@ -19,9 +19,9 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="overflow-y-auto">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-white text-black dark:bg-neutral-900 dark:text-white antialiased transition-colors`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-white text-black dark:bg-neutral-900 dark:text-white antialiased transition-colors overflow-y-auto`}
       >
         <ClientProviders>
           <FontWrapper>

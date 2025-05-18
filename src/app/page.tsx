@@ -35,7 +35,7 @@ export default function HomePage() {
 
   return (
     <main
-      className={`max-w-5xl mx-auto p-4 md:p-8 ${`font-${font}`} flex flex-col min-h-screen`}
+      className={`max-w-5xl mx-auto p-4 md:p-8 font-${font} flex flex-col bg-green-500`}
     >
       {/* Header: Icon + Controls */}
       <Header fonts={fontOptions} font={font} setFont={handleSetFont} />
