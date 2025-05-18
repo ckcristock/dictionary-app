@@ -51,6 +51,7 @@ const Results: React.FC = () => {
             meanings={meaning.definitions.map((d) => d.definition)}
             synonyms={meaning.synonyms || []}
             quote={meaning.definitions.find((d) => d.example)?.example}
+            isFirst={idx === 0} // This is the key line!
           />
         ))}
       </section>

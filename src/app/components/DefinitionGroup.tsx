@@ -3,6 +3,7 @@ type DefinitionGroupProps = {
   meanings: string[];
   synonyms?: string[];
   quote?: string;
+  isFirst?: boolean; // Add the isFirst prop
 };
 
 const DefinitionGroup: React.FC<DefinitionGroupProps> = ({
@@ -10,13 +11,18 @@ const DefinitionGroup: React.FC<DefinitionGroupProps> = ({
   meanings,
   synonyms,
   quote,
+  isFirst, // Destructure the isFirst prop
 }) => (
   <div>
-    <div className="flex items-center mb-2">
-      <h2 className="italic font-semibold mr-4 whitespace-nowrap">
-        {partOfSpeech}
-      </h2>
-      <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
+    <div className="mb-2">
+      <div className="flex items-center">
+        <h2 className="italic font-semibold mr-4 whitespace-nowrap">
+          {partOfSpeech}
+        </h2>
+        {isFirst && (
+          <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
+        )}
+      </div>
     </div>
     <p className="mb-2 text-[#aeb6d0]">Meaning</p>
     <ul className="list-disc pl-5 space-y-1">
