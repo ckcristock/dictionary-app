@@ -1,8 +1,9 @@
-/* File: app/layout.tsx */
+// layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ClientProviders from "./providers/client-providers";
+import FontWrapper from "./components/FontWrapper"; // <-- NUEVO
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({
@@ -23,11 +24,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-white text-black dark:bg-neutral-900 dark:text-white antialiased transition-colors`}
       >
-        {/* ClientProviders is a client component handling Redux and theme hooks */}
         <ClientProviders>
-          <main className="flex flex-col items-center px-10 pt-6 pb-6 max-w-3xl mx-auto">
-            <section className="w-full">{children}</section>
-          </main>
+          <FontWrapper>
+            <main className="flex flex-col items-center px-10 pt-6 pb-6 max-w-3xl mx-auto">
+              <section className="w-full">{children}</section>
+            </main>
+          </FontWrapper>
         </ClientProviders>
       </body>
     </html>
