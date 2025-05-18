@@ -202,6 +202,24 @@ const SearchBar: React.FC<SearchBarProps> = ({
           if (e.key === "Enter") handleSearch();
         }}
       />
+      {search.trim() !== "" && (
+        <button
+          aria-label="Clear search"
+          className="absolute right-12 top-1/2 -translate-y-1/2 p-1 hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 rounded cursor-pointer"
+          onClick={() => {
+            setSearch("");
+            setError("");
+            inputRef.current?.focus();
+          }}
+          type="button"
+        >
+          <X
+            size={18}
+            className={theme === "dark" ? "text-white" : "text-black"}
+          />
+        </button>
+      )}
+
       <button
         ref={searchBtnRef}
         aria-label="Search"
@@ -215,6 +233,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           className={theme === "dark" ? "text-white" : "text-black"}
         />
       </button>
+
       <div className="absolute left-0 w-full mt-1 h-5">
         {error && <p className="text-red-500 text-sm pl-1">{error}</p>}
       </div>
