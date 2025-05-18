@@ -182,7 +182,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <div className="relative w-full mx-auto px-3 sm:px-6">
+    <div className="relative w-full">
       <input
         ref={inputRef}
         type="text"
@@ -206,7 +206,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         ref={searchBtnRef}
         aria-label="Search"
         tabIndex={showSuggestions ? -1 : 0}
-        className="absolute right-10 top-1/2 -translate-y-1/2 hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 rounded cursor-pointer"
+        className="absolute right-4 top-1/2 -translate-y-1/2 hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 rounded cursor-pointer"
         onClick={handleSearch}
         type="button"
       >
