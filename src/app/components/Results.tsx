@@ -36,7 +36,7 @@ const Results: React.FC = () => {
   };
 
   return (
-    <article className="flex-grow mt-8">
+    <article className="flex-grow mt-8 mb-16">
       <WordHeader
         word={result.word}
         phonetic={phonetic}
@@ -56,12 +56,12 @@ const Results: React.FC = () => {
       </section>
 
       <footer className="mt-10 text-sm text-gray-400 dark:text-gray-500">
-        Source{" "}
+        <div className="text-[#aeb6d0]">Source</div>
         <a
           href={result.sourceUrls[0]}
           target="_blank"
           rel="noopener noreferrer"
-          className="underline hover:text-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400 rounded"
+          className="underline hover:text-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400 rounded block"
         >
           {result.sourceUrls[0]}
         </a>
