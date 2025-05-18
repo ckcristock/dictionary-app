@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 export interface Meaning {
   partOfSpeech: string;
   definitions: { definition: string; example?: string; synonyms?: string[] }[];
+  synonyms: string[];
 }
 
 export interface DictionaryEntry {

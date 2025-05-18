@@ -49,7 +49,7 @@ const Results: React.FC = () => {
             key={`${meaning.partOfSpeech}-${idx}`}
             partOfSpeech={meaning.partOfSpeech}
             meanings={meaning.definitions.map((d) => d.definition)}
-            synonyms={meaning.definitions.flatMap((d) => d.synonyms || [])}
+            synonyms={meaning.synonyms || []}
             quote={meaning.definitions.find((d) => d.example)?.example}
           />
         ))}
