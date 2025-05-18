@@ -186,7 +186,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       <input
         ref={inputRef}
         type="text"
-        placeholder="Search word..."
+        placeholder="Search for a word…"
         className={`w-full rounded-xl px-5 py-3 text-base sm:text-lg shadow-sm focus:outline-none focus:ring-2 ${
           error ? "ring-2 ring-red-500" : "focus:ring-purple-600"
         }`}
