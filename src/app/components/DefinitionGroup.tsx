@@ -18,7 +18,7 @@ const DefinitionGroup: React.FC<DefinitionGroupProps> = ({
       </h2>
       <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
     </div>
-    <p className="mb-2 font-semibold">Meaning</p>
+    <p className="mb-2 text-[#c4c4c4]">Meaning</p>
     <ul className="list-disc pl-5 space-y-1 text-gray-700 dark:text-gray-300">
       {meanings.map((m, i) => (
         <li key={i}>{m}</li>
@@ -42,7 +42,6 @@ const DefinitionGroup: React.FC<DefinitionGroupProps> = ({
         </div>
       </div>
     )}
-
     {quote && (
       <blockquote className="mt-2 pl-5 border-l-4 border-gray-300 dark:border-gray-600 italic text-gray-500 dark:text-gray-400">
         {quote}
