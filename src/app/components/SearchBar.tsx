@@ -70,6 +70,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   const [error, setError] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const searchBtnRef = useRef<HTMLButtonElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
@@ -96,6 +97,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setShowSuggestions(false);
+        setHighlightedIndex(-1);
         inputRef.current?.focus();
       }
     };
@@ -120,11 +122,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
     setSearch(normalized);
     onSearch(normalized);
     setShowSuggestions(false);
+    setHighlightedIndex(-1);
   };
 
   const handleSelectHistory = (word: string) => {
     setSearch(word);
     setShowSuggestions(false);
+    setHighlightedIndex(-1);
     onSearch(word);
   };
 
@@ -149,6 +153,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       )
         return;
       setShowSuggestions(false);
+      setHighlightedIndex(-1);
     });
   };
 
@@ -165,12 +170,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
     if (!e.shiftKey && next >= focusables.length) {
       e.preventDefault();
       setShowSuggestions(false);
+      setHighlightedIndex(-1);
       searchBtnRef.current?.focus();
       return;
     }
     if (e.shiftKey && next < 0) {
       e.preventDefault();
       setShowSuggestions(false);
+      setHighlightedIndex(-1);
       searchBtnRef.current?.focus();
       return;
     }
@@ -195,11 +202,27 @@ const SearchBar: React.FC<SearchBarProps> = ({
           setSearch(e.target.value);
           if (error) setError("");
           setShowSuggestions(true);
+          setHighlightedIndex(-1);
         }}
         onFocus={() => setShowSuggestions(true)}
         onBlur={handleBlur}
         onKeyDown={(e) => {
-          if (e.key === "Enter") handleSearch();
+          const lastIndex = filteredHistory.length - 1;
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            setShowSuggestions(true);
+            setHighlightedIndex((prev) => (prev < lastIndex ? prev + 1 : 0));
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            setShowSuggestions(true);
+            setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : lastIndex));
+          } else if (e.key === "Enter") {
+            if (highlightedIndex >= 0 && filteredHistory[highlightedIndex]) {
+              handleSelectHistory(filteredHistory[highlightedIndex].word);
+            } else {
+              handleSearch();
+            }
+          }
         }}
       />
       {search.trim() !== "" && (
@@ -209,6 +232,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           onClick={() => {
             setSearch("");
             setError("");
+            setHighlightedIndex(-1);
             inputRef.current?.focus();
           }}
           type="button"
@@ -250,12 +274,16 @@ const SearchBar: React.FC<SearchBarProps> = ({
           }`}
         >
           <ul>
-            {filteredHistory.map((item) => (
+            {filteredHistory.map((item, index) => (
               <li
                 key={item.word}
                 tabIndex={0}
                 className={`flex justify-between items-center px-4 py-2 cursor-pointer rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 ${
-                  theme === "dark"
+                  index === highlightedIndex
+                    ? theme === "dark"
+                      ? "bg-zinc-700 text-white"
+                      : "bg-gray-200 text-black"
+                    : theme === "dark"
                     ? "text-gray-200 hover:bg-zinc-800"
                     : "text-gray-800 hover:bg-gray-100"
                 }`}
