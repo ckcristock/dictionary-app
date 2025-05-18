@@ -9,7 +9,7 @@ const WordHeader: React.FC<WordHeaderProps> = ({ word, phonetic, onPlay }) => (
     <div className="flex items-start justify-between mb-8">
       <div>
         <h1 className="text-5xl font-extrabold tracking-tight">{word}</h1>
-        <p className="text-purple-600 text-xl">{phonetic}</p>
+        <p className="text-purple-600 text-xl mt-3">{phonetic}</p>
       </div>
 
       <button

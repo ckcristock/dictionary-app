@@ -36,7 +36,7 @@ const Results: React.FC = () => {
   };
 
   return (
-    <article className="flex-grow">
+    <article className="flex-grow mt-8">
       <WordHeader
         word={result.word}
         phonetic={phonetic}

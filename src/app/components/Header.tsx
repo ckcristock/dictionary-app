@@ -1,11 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ThemeToggle from "./ThemeToggle";
 import { useAppSelector } from "@/app/hooks/redux";
 import type { Font } from "@/app/store/themeSlice";
 import Image from "next/image";
-import libroIcon from "../assets/libro100.png";
+import libroIconNegro from "../assets/libro100.png";
+import libroIconBlanco from "../assets/libro100blanco.png";
 
 type FontOption = { label: string; value: Font };
 
@@ -25,16 +26,39 @@ const Header: React.FC<HeaderProps> = ({
   setDarkMode,
 }) => {
   const theme = useAppSelector((state) => state.theme.theme);
+  const [showBlack, setShowBlack] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowBlack(true);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [theme]);
 
   return (
     <header className="flex justify-between items-center mb-6 pt-0 mt-0 md:px-0">
       <div className="flex items-center">
         <button
-          className="text-3xl font-bold cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 rounded transition mr-4" // Added right margin
+          className="text-3xl font-bold cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 rounded transition mr-4"
           aria-label="Go to home"
           type="button"
         >
-          <Image src={libroIcon} alt="Libro Icon" width={40} height={40} />
+          {theme === "dark" ? (
+            <Image
+              src={libroIconBlanco}
+              alt="Libro Icon"
+              width={40}
+              height={40}
+            />
+          ) : (
+            <Image
+              src={libroIconNegro}
+              alt="Libro Icon"
+              width={40}
+              height={40}
+            />
+          )}
         </button>
       </div>
       <div className="flex items-center space-x-4">

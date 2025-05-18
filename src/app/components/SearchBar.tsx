@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useRef, useEffect } from "react";
 import { Search, Trash2, X } from "lucide-react";
 import { RootState } from "../store";
@@ -74,6 +75,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
+  const { theme } = useSelector((state: RootState) => state.theme); // Get the current theme
   const history = useSelector((state: RootState) => state.dictionary.history);
 
   useEffect(() => {
@@ -208,7 +210,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
         onClick={handleSearch}
         type="button"
       >
-        <Search size={20} className="text-black dark:text-white" />
+        <Search
+          size={20}
+          className={theme === "dark" ? "text-white" : "text-black"} // Apply theme color
+        />
       </button>
       {error && <p className="text-red-500 text-sm mt-2 pl-1">{error}</p>}
       {showSuggestions && filteredHistory.length > 0 && (
