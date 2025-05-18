@@ -36,6 +36,7 @@ export const fetchWord = createAsyncThunk(
       );
       if (!res.ok) throw new Error("Word not found");
       const data = await res.json();
+      console.log("Fetched data:", data);
       return data[0] as DictionaryEntry;
     } catch (error: any) {
       return rejectWithValue(error.message || "Unknown error");
