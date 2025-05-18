@@ -215,7 +215,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
           className={theme === "dark" ? "text-white" : "text-black"}
         />
       </button>
-      {error && <p className="text-red-500 text-sm mt-2 pl-1">{error}</p>}
+      <div className="absolute left-0 w-full mt-1 h-5">
+        {error && <p className="text-red-500 text-sm pl-1">{error}</p>}
+      </div>
+
       {showSuggestions && filteredHistory.length > 0 && (
         <div
           ref={suggestionsRef}
