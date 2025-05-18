@@ -20,7 +20,7 @@ export default function HomePage() {
   const dispatch = useAppDispatch();
   const font = useAppSelector((state) => state.theme.font);
 
-  const [search, setSearch] = useState("keyboard");
+  const [search, setSearch] = useState("");
 
   const handleSetFont = (newFont: Font) => {
     dispatch(setFont(newFont));
