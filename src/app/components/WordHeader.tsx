@@ -1,3 +1,5 @@
+import { Play } from "lucide-react"; // o el ícono que prefieras
+
 type WordHeaderProps = {
   word: string;
   phonetic: string;
@@ -19,7 +21,14 @@ const WordHeader: React.FC<WordHeaderProps> = ({ word, phonetic, onPlay }) => (
   focus-visible:ring-2 focus-visible:ring-purple-400 transition-colors"
         onClick={onPlay}
       >
-        <span style={{ color: "black", transform: "translateX(2px)" }}>▶</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="#a444ed"
+          className="w-6 h-6 translate-x-[1px]"
+        >
+          <path d="M5 3.868v16.264c0 .795.863 1.291 1.548.894l13.017-8.132a1.032 1.032 0 000-1.788L6.548 2.974A1.032 1.032 0 005 3.868z" />
+        </svg>
       </button>
     </div>
   </>
