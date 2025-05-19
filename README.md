@@ -20,6 +20,8 @@ Este proyecto es una aplicación web de diccionario desarrollada como parte de u
 
 🖱️ Estados visuales de hover y focus para todos los elementos interactivos.
 
+> > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+
 🧱 Tecnologías utilizadas
 Framework: Next.js
 
@@ -32,6 +34,8 @@ Manejo de estado: Redux Toolkit
 Testing: Jest + React Testing Library
 
 API de definiciones: Free Dictionary API
+
+> > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
 
 🧑‍💻 Cómo ejecutar el proyecto localmente
 Clona el repositorio:
