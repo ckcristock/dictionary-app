@@ -40,7 +40,7 @@ API de definiciones: Free Dictionary API
 🧑‍💻 Cómo ejecutar el proyecto localmente
 Clona el repositorio:
 
-git clone https://github.com/tu-usuario/nombre-del-repo.git
+git clone https://github.com/ckcristock/dictionary-app.git
 cd nombre-del-repo
 
 Instala las dependencias:
