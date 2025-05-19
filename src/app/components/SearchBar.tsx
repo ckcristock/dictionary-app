@@ -242,7 +242,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         >
           <X
             size={18}
-            className={theme === "dark" ? "text-white" : "text-black"}
+            className={theme === "dark" ? "text-white" : "text-[#b98ccf]"}
           />
         </button>
       )}
@@ -257,7 +257,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       >
         <Search
           size={20}
-          className={theme === "light" ? "text-[#c7a8db]" : "text-white"}
+          className={theme === "light" ? "text-[#b98ccf]" : "text-white"}
         />
       </button>
 
