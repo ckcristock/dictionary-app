@@ -46,3 +46,8 @@ Inicia el servidor de desarrollo:
 npm run dev
 
 Abre tu navegador y entra a http://localhost:3000
+
+> > Puedes navegar a través del historial de palabras con la tecla TAB, y tambien con las teclas
+> > arriba y abajo.
+> > El diccionario tiene un validador de formatos, y verificación de palabras permitidas y prohibidas.
+> > El listado de palabras en inglés prohibidas puede consultarse en el archivo SearchBar.tsx en la constante "blacklist".
