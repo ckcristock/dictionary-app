@@ -51,7 +51,6 @@ npm run dev
 
 Abre tu navegador y entra a http://localhost:3000
 
-> > Puedes navegar a través del historial de palabras con la tecla TAB, y tambien con las teclas
-> > arriba y abajo.
-> > El diccionario tiene un validador de formatos, y verificación de palabras permitidas y prohibidas.
-> > El listado de palabras en inglés prohibidas puede consultarse en el archivo SearchBar.tsx en la constante "blacklist".
+> > Puedes navegar por el historial de palabras buscadas utilizando la tecla TAB, así como las teclas de flecha arriba y abajo, lo que mejora la experiencia para usuarios que, en sus labores diarias con software, minimizan el uso del mouse y completan formularios rápidamente mediante el uso del teclado.
+> > El diccionario incluye validación de formatos y verifica tanto palabras permitidas como prohibidas.
+> > El listado de palabras prohibidas en inglés se encuentra en el archivo SearchBar.tsx, dentro de la constante blacklist.
