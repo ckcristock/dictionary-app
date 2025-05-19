@@ -33,22 +33,6 @@ Testing: Jest + React Testing Library
 
 API de definiciones: Free Dictionary API
 
-📁 Estructura del proyecto
-
-src/
-└── app/
-├── assets/ # Imágenes y recursos visuales
-├── components/ # Componentes reutilizables
-├── contexts/ # Contextos de React (si aplica)
-├── hooks/ # Hooks personalizados (Redux)
-├── providers/ # Proveedores de contexto global (tema, redux)
-├── store/ # Slices de Redux y configuración del store
-├── types/ # Tipos TypeScript
-├── utils/ # Funciones utilitarias
-├── globals.css # Estilos globales con Tailwind
-├── layout.tsx # Layout raíz
-└── page.tsx # Página principal
-
 🧑‍💻 Cómo ejecutar el proyecto localmente
 Clona el repositorio:
 
