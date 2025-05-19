@@ -85,6 +85,7 @@ const Header: React.FC<HeaderProps> = ({
             </option>
           ))}
         </select>
+        <div className="h-7 w-px bg-[#c9c9c9] dark:bg-[#666666] mr-4" />
         {/* Toggle dark mode */}
         <ThemeToggle />
         {/* Moon icon */}
@@ -94,7 +95,9 @@ const Header: React.FC<HeaderProps> = ({
           viewBox="0 0 24 24"
           strokeWidth={2}
           stroke="currentColor"
-          className="w-5 h-5" // Reduced size for mobile
+          className={`w-7 h-7 transition-colors ${
+            theme === "dark" ? "text-white" : "text-[#c9c9c9]"
+          }`}
         >
           <path
             strokeLinecap="round"
