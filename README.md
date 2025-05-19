@@ -41,7 +41,7 @@ API de definiciones: Free Dictionary API
 Clona el repositorio:
 
 git clone https://github.com/ckcristock/dictionary-app.git
-cd nombre-del-repo
+cd dictionary-app
 
 Instala las dependencias:
 npm install
