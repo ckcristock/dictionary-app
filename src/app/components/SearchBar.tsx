@@ -225,6 +225,32 @@ const SearchBar: React.FC<SearchBarProps> = ({
             } else {
               handleSearch();
             }
+          } else if (e.key === "Tab") {
+            if (showSuggestions && filteredHistory.length > 0) {
+              e.preventDefault();
+              if (highlightedIndex < 0) {
+                setHighlightedIndex(0);
+                const firstSuggestion =
+                  suggestionsRef.current?.querySelector('li[tabindex="0"]');
+                firstSuggestion?.focus();
+              } else if (suggestionsRef.current) {
+                const focusables = Array.from(
+                  suggestionsRef.current.querySelectorAll('li[tabindex="0"]')
+                ) as HTMLElement[];
+                const currentIndex = focusables.findIndex(
+                  (el) => el === document.activeElement
+                );
+                let nextIndex = currentIndex + 1;
+                if (nextIndex < focusables.length) {
+                  focusables[nextIndex].focus();
+                  setHighlightedIndex(nextIndex);
+                } else {
+                  setShowSuggestions(false);
+                  setHighlightedIndex(-1);
+                  searchBtnRef.current?.focus();
+                }
+              }
+            }
           }
         }}
       />
